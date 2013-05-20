@@ -21,59 +21,49 @@ public class Unit{
 	private float y;
 	private int cellX;
 	private int cellY;
-	private Cell cell;
 	
 	
-	public Unit(Cell cell, ITextureRegion unitTexture, MyEntity layer, VertexBufferObjectManager manager){
-		this.x = cell.getPositionToPlace().getFirst();
-		this.y = cell.getPositionToPlace().getSecond();
-		this.cell = cell;
+	public Unit(Pair<Integer, Integer> absPos, Pair<Float, Float> factPos, ITextureRegion unitTexture, MyEntity layer, VertexBufferObjectManager manager){
+		this.x = factPos.getFirst();
+		this.y = factPos.getSecond();
 		this.layer = layer;
 		this.manager = manager;
 		this.unitTexture = unitTexture;
 		sprite = new Sprite(x, y, unitTexture, manager);
 		layer.attachChild(sprite);
-		Pair<Integer, Integer> p = cell.getPositionInField();
-		cellX = p.getFirst();
-		cellY = p.getSecond();
+		cellX = absPos.getFirst();
+		cellY = absPos.getSecond();
 	}
 	
 	
-	public Unit(Cell cell, ITextureRegion unitTexture, boolean flipped, MyEntity layer, VertexBufferObjectManager manager){
-		this.x = cell.getPositionToPlace().getFirst();
-		this.y = cell.getPositionToPlace().getSecond();
-		this.cell = cell;
+	public Unit(Pair<Integer, Integer> absPos, Pair<Float, Float> factPos, ITextureRegion unitTexture, boolean flipped, MyEntity layer, VertexBufferObjectManager manager){
+		this.x = factPos.getFirst();
+		this.y = factPos.getSecond();
 		this.layer = layer;
 		this.manager = manager;
 		this.unitTexture = unitTexture;
 		sprite = new Sprite(x, y, unitTexture, manager);
 		sprite.setFlippedHorizontal(flipped);
 		layer.attachChild(sprite);
-		Pair<Integer, Integer> p = cell.getPositionInField();
-		cellX = p.getFirst();
-		cellY = p.getSecond();
+		cellX = absPos.getFirst();
+		cellY = absPos.getSecond();
 	}
 	
-	public void setCell(Cell cell){
-		Pair<Integer, Integer> p = cell.getPositionInField();
-		int tmpCellX = p.getFirst();
-		int tmpCellY = p.getSecond();
-		this.cell.setUnit(null);
+	public void setCell(Pair<Integer, Integer> absPos, Pair<Float, Float> factPos){
+		int tmpCellX = absPos.getFirst();
+		int tmpCellY = absPos.getSecond();
 		if(this.cellX > tmpCellX && !isFlipped()){
 			flip();
 		}else if(this.cellX < tmpCellX && isFlipped()){
 			flip();
 		}
-		setUnitPosition(cell);
-		cell.setUnit(this);
+		setUnitPosition(factPos);
 		this.cellX = tmpCellX;
 		this.cellY = tmpCellY;
-		this.cell = cell;
 	}
 	
-	private void setUnitPosition(Cell cell){
-		Pair<Float, Float> p = cell.getPositionToPlace();
-		sprite.setPosition(p.getFirst(), p.getSecond());
+	private void setUnitPosition(Pair<Float, Float> factPos){
+		sprite.setPosition(factPos.getFirst(), factPos.getSecond());
 	}
 	
 	private void flip(){

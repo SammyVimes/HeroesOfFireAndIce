@@ -1,9 +1,6 @@
 package com.danilov.heroesfai.Battlefield;
 
-import org.andengine.entity.Entity;
-import org.andengine.entity.scene.Scene;
 import org.andengine.entity.sprite.Sprite;
-import org.andengine.entity.sprite.vbo.ISpriteVertexBufferObject;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
@@ -32,12 +29,9 @@ public class Cell{
 	private float x;
 	private float y;
 	private Unit unit;
-	private Cell[][] battlefield;
-	private int cellXQuantity;
-	private int cellYQuantity;
-	private BattlefieldController controller;
+	private AbstractController controller;
 	
-	public Cell(float x, float y, int fieldX, int fieldY, Cell[][] battlefield, int cellXQuantity, int cellYQuantity, MyEntity layer, VertexBufferObjectManager manager){
+	public Cell(float x, float y, int fieldX, int fieldY, MyEntity layer, VertexBufferObjectManager manager){
 		curState = GREY;
 		this.x = x;
 		this.y = y;
@@ -45,13 +39,13 @@ public class Cell{
 		this.fieldY = fieldY;
 		this.layer = layer;
 		this.manager = manager;
-		this.battlefield = battlefield;
-		this.cellXQuantity = cellXQuantity;
-		this.cellYQuantity = cellYQuantity;
 		sprite = new MySprite(x, y, cellTextures[GREY], manager);
-		controller = new BattlefieldController(this, battlefield, cellXQuantity, cellYQuantity);
 		layer.attachChild(sprite);
 		registerTouchArea();
+	}
+	
+	public void setController(AbstractController controller){
+		this.controller = controller;
 	}
 	
 	private void registerTouchArea(){

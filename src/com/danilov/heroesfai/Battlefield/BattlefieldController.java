@@ -1,14 +1,9 @@
 package com.danilov.heroesfai.Battlefield;
 
-import org.andengine.entity.scene.IOnSceneTouchListener;
-import org.andengine.entity.scene.Scene;
-import org.andengine.input.touch.TouchEvent;
-
-import com.danilov.heroesfai.BattlefieldActivity;
 import com.danilov.heroesfai.units.Unit;
 import com.danilov.util.Pair;
 
-public class BattlefieldController{
+public class BattlefieldController implements AbstractController{
 	
 	private Cell cell;
 	private Cell battlefield[][];
@@ -23,16 +18,35 @@ public class BattlefieldController{
 		this.cellYQuantity = cellYQuantity;
 	}
 
-	public boolean onTouch() {
+	public void onTouch() {
 		if(cell.getState() == Cell.WHITE){
-			battleQueue.getUnit().setCell(cell);
-			battleQueue.nextUnit();
-			drawUnitTree(battleQueue.getUnit());
+			moveUnit();
 		}
-		return false;
 	}
 	
-	private void drawUnitTree(Unit u){
+	private void moveUnit(){
+		findCell(battleQueue.getUnit()).setUnit(null);
+		battleQueue.getUnit().setCell(cell.getPositionInField(), cell.getPositionToPlace());
+		cell.setUnit(battleQueue.getUnit());
+		battleQueue.nextUnit();
+		drawUnitTree(battleQueue.getUnit());
+	}
+	
+	private Cell findCell(Unit u){
+		Cell cell = null;
+		for(int i = 0; i < cellYQuantity; i++){
+			for(int j = 0; j < cellXQuantity; j++){
+				if(battlefield[i][j].getUnit() == u){
+					cell = battlefield[i][j];
+					break;
+				}
+			}
+		}
+		return cell;
+	}
+	
+	
+	public void drawUnitTree(Unit u){
 		Pair<Integer, Integer> p = u.getCellPosition();
 		int cellX = p.getFirst();
 		int cellY = p.getSecond();

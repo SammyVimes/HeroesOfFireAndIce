@@ -85,11 +85,13 @@ public class BattlefieldActivity extends BaseGameActivity {
 	
 	private void test(){
 		BattleQueue bq = new BattleQueue();
-		u = new Unit(battlefield[1][0], textureHashMap.get("pikeman"), topLayer, mEngine.getVertexBufferObjectManager());
+		u = new Unit(battlefield[1][0].getPositionInField(), battlefield[1][0].getPositionToPlace(), textureHashMap.get("pikeman"), topLayer, mEngine.getVertexBufferObjectManager());
 		bq.addToQueue(u);
+		battlefield[1][0].setUnit(u);
 		drawUnitTree(u);
-		u = new Unit(battlefield[3][3], textureHashMap.get("pikeman"), topLayer, mEngine.getVertexBufferObjectManager());
+		u = new Unit(battlefield[3][3].getPositionInField(), battlefield[3][3].getPositionToPlace(), textureHashMap.get("pikeman"), topLayer, mEngine.getVertexBufferObjectManager());
 		bq.addToQueue(u);
+		battlefield[3][3].setUnit(u);
 		BattlefieldController.setBattleQueue(bq);
 	}
 	
@@ -137,7 +139,9 @@ public class BattlefieldActivity extends BaseGameActivity {
 		for(int i = 0; i < cellYQuantity; i++){
 			float xOffset = 212;
 			for(int j = 0; j < cellXQuantity; j++){
-				battlefield[i][j] = new Cell(xOffset, yOffset, j, i, battlefield, cellXQuantity, cellYQuantity, bottomLayer, mEngine.getVertexBufferObjectManager());
+				Cell tmp = new Cell(xOffset, yOffset, j, i, bottomLayer, mEngine.getVertexBufferObjectManager());
+				battlefield[i][j] = tmp;
+				tmp.setController(new BattlefieldController(tmp, battlefield, cellXQuantity, cellYQuantity));
 				xOffset += 75;
 			}
 			yOffset += 75;
